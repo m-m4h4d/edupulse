@@ -36,7 +36,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
-    final isLoading = authState == AuthState.loading;
+    final isLoading = authState.isLoading;
 
     return Scaffold(
       body: SafeArea(
@@ -64,10 +64,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                     textAlign: TextAlign.center,
                   ),
-                  if (authState == AuthState.error) ...[
+                  if (authState.errorMessage != null) ...[
                     const SizedBox(height: 16),
-                    const Text(
-                      'Invalid email or password',
+                    Text(
+                      authState.errorMessage!,
                       style: TextStyle(color: Colors.red),
                       textAlign: TextAlign.center,
                     ),

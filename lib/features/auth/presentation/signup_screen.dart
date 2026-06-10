@@ -39,7 +39,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
-    final isLoading = authState == AuthState.loading;
+    final isLoading = authState.isLoading;
 
     return Scaffold(
       appBar: AppBar(
@@ -63,9 +63,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     },
                   ),
                   const SizedBox(height: 32),
-                  if (authState == AuthState.error) ...[
-                    const Text(
-                      'An error occurred during signup',
+                  if (authState.errorMessage != null) ...[
+                    Text(
+                      authState.errorMessage!,
                       style: TextStyle(color: Colors.red),
                       textAlign: TextAlign.center,
                     ),

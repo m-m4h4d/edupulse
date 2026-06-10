@@ -2,46 +2,65 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'features/auth/presentation/auth_provider.dart';
+import 'core/theme/theme_provider.dart';
 import 'routes/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
 
+  // Load color scheme from logo
+  const imageProvider = AssetImage('assets/logo.png');
+  final lightColorScheme = await ColorScheme.fromImageProvider(
+    provider: imageProvider,
+    brightness: Brightness.light,
+  );
+  final darkColorScheme = await ColorScheme.fromImageProvider(
+    provider: imageProvider,
+    brightness: Brightness.dark,
+  );
+
   runApp(
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWithValue(prefs),
       ],
-      child: const EduPulseApp(),
+      child: EduPulseApp(
+        lightColorScheme: lightColorScheme,
+        darkColorScheme: darkColorScheme,
+      ),
     ),
   );
 }
 
 class EduPulseApp extends ConsumerWidget {
-  const EduPulseApp({super.key});
+  final ColorScheme lightColorScheme;
+  final ColorScheme darkColorScheme;
+
+  const EduPulseApp({
+    super.key,
+    required this.lightColorScheme,
+    required this.darkColorScheme,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
+    final router = ref.watch(goRouterProvider);
+
     return MaterialApp.router(
       title: 'EduPulse',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          brightness: Brightness.light,
-        ),
+        colorScheme: lightColorScheme,
         useMaterial3: true,
       ),
       darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          brightness: Brightness.dark,
-        ),
+        colorScheme: darkColorScheme,
         useMaterial3: true,
       ),
-      themeMode: ThemeMode.system, // We can manage this with Riverpod later
-      routerConfig: ref.watch(goRouterProvider),
+      themeMode: themeMode,
+      routerConfig: router,
     );
   }
 }

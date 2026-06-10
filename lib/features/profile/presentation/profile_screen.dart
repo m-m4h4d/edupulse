@@ -1,12 +1,16 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../auth/presentation/auth_provider.dart';
+import 'settings_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authProvider).user;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -14,29 +18,40 @@ class ProfileScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          const Center(
+          Center(
             child: CircleAvatar(
               radius: 50,
-              child: Icon(Icons.person, size: 50),
+              backgroundImage: user?.profilePicturePath != null 
+                ? FileImage(File(user!.profilePicturePath!)) 
+                : null,
+              child: user?.profilePicturePath == null 
+                ? const Icon(Icons.person, size: 50) 
+                : null,
             ),
           ),
           const SizedBox(height: 16),
-          const Center(
+          Center(
             child: Text(
-              'Student Name',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              user?.name ?? 'Student Name',
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Center(
+            child: Text(
+              user?.email ?? '',
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
           ),
           const SizedBox(height: 32),
           ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
-            onTap: () {},
-          ),
-          ListTile(
-            leading: const Icon(Icons.help_outline),
-            title: const Text('Help & Support'),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              );
+            },
           ),
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),

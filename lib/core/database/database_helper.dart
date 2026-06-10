@@ -110,6 +110,23 @@ class DatabaseHelper {
     for (var c in courses) {
       await db.insert(tableCourses, c);
     }
+
+    // Insert Mock Lessons
+    final lessons = [
+      {'id': 'l1', 'course_id': 'c1', 'title': 'What is Flutter?', 'video_url': 'vid1', 'duration': 300, 'order_index': 1},
+      {'id': 'l2', 'course_id': 'c1', 'title': 'Widget Tree', 'video_url': 'vid2', 'duration': 400, 'order_index': 2},
+      {'id': 'l3', 'course_id': 'c1', 'title': 'Stateful vs Stateless', 'video_url': 'vid3', 'duration': 500, 'order_index': 3},
+
+      {'id': 'l4', 'course_id': 'c2', 'title': 'Color Theory', 'video_url': 'vid4', 'duration': 350, 'order_index': 1},
+      {'id': 'l5', 'course_id': 'c2', 'title': 'Typography', 'video_url': 'vid5', 'duration': 450, 'order_index': 2},
+
+      {'id': 'l6', 'course_id': 'c3', 'title': 'Riverpod Basics', 'video_url': 'vid6', 'duration': 600, 'order_index': 1},
+      {'id': 'l7', 'course_id': 'c3', 'title': 'AsyncValue', 'video_url': 'vid7', 'duration': 550, 'order_index': 2},
+    ];
+
+    for (var l in lessons) {
+      await db.insert(tableLessons, l);
+    }
   }
 
   // Helper methods for generic CRUD can be added here

@@ -1,4 +1,4 @@
-
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -18,7 +18,10 @@ void main() {
         overrides: [
           sharedPreferencesProvider.overrideWithValue(prefs),
         ],
-        child: const EduPulseApp(),
+        child: EduPulseApp(
+        lightColorScheme: ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.light),
+        darkColorScheme: ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.dark),
+      ),
       ),
     );
 

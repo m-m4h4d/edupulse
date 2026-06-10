@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/database/database_helper.dart';
+import 'course_detail_screen.dart';
 
 class MyCoursesScreen extends StatefulWidget {
   const MyCoursesScreen({super.key});
@@ -22,7 +23,7 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
     final db = await DatabaseHelper.instance.database;
     // Join courses and enrollments
     final data = await db.rawQuery('''
-      SELECT c.title, c.description, e.progress_percent 
+      SELECT c.id as course_id, c.title, c.description, e.progress_percent 
       FROM ${DatabaseHelper.tableEnrollments} e
       JOIN ${DatabaseHelper.tableCourses} c ON e.course_id = c.id
     ''');
@@ -50,21 +51,33 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                     final item = _enrollments[index];
                     return Card(
                       margin: const EdgeInsets.only(bottom: 16.0),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(16.0),
-                        leading: const Icon(Icons.play_circle_fill, size: 40, color: Colors.blue),
-                        title: Text(item['title'], style: const TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 8),
-                            Text('Progress: ${(item['progress_percent'] * 100).toInt()}%'),
-                            const SizedBox(height: 4),
-                            LinearProgressIndicator(
-                              value: item['progress_percent'],
-                              backgroundColor: Colors.grey[300],
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => CourseDetailScreen(
+                                courseId: item['course_id'],
+                                title: item['title'],
+                              ),
                             ),
-                          ],
+                          ).then((_) => _loadEnrollments()); // Reload progress on return
+                        },
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(16.0),
+                          leading: const Icon(Icons.play_circle_fill, size: 40, color: Colors.blue),
+                          title: Text(item['title'], style: const TextStyle(fontWeight: FontWeight.bold)),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 8),
+                              Text('Progress: ${(item['progress_percent'] * 100).toInt()}%'),
+                              const SizedBox(height: 4),
+                              LinearProgressIndicator(
+                                value: item['progress_percent'],
+                                backgroundColor: Colors.grey[300],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );
