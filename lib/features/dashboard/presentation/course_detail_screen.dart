@@ -96,12 +96,22 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : _lessons.isEmpty
-              ? const Center(child: Text('No lessons available'))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16.0),
-                  itemCount: _lessons.length,
-                  itemBuilder: (context, index) {
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Hero(
+                    tag: 'course_icon_${widget.courseId}',
+                    child: const Icon(Icons.school, size: 80, color: Colors.blue),
+                  ),
+                ),
+                Expanded(
+                  child: _lessons.isEmpty
+                      ? const Center(child: Text('No lessons available'))
+                      : ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          itemCount: _lessons.length,
+                          itemBuilder: (context, index) {
                     final lesson = _lessons[index];
                     final isComplete = lesson['is_completed'] == 1;
 
@@ -127,6 +137,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     );
                   },
                 ),
+                ),
+              ],
+            ),
     );
   }
 }

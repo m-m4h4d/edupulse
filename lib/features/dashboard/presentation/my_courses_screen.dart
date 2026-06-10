@@ -64,7 +64,10 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                         },
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(16.0),
-                          leading: const Icon(Icons.play_circle_fill, size: 40, color: Colors.blue),
+                          leading: Hero(
+                            tag: 'course_icon_${item['course_id']}',
+                            child: const Icon(Icons.school, size: 40, color: Colors.blue),
+                          ),
                           title: Text(item['title'], style: const TextStyle(fontWeight: FontWeight.bold)),
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,9 +75,16 @@ class _MyCoursesScreenState extends State<MyCoursesScreen> {
                               const SizedBox(height: 8),
                               Text('Progress: ${(item['progress_percent'] * 100).toInt()}%'),
                               const SizedBox(height: 4),
-                              LinearProgressIndicator(
-                                value: item['progress_percent'],
-                                backgroundColor: Colors.grey[300],
+                              TweenAnimationBuilder<double>(
+                                duration: const Duration(milliseconds: 800),
+                                curve: Curves.easeOutCubic,
+                                tween: Tween<double>(begin: 0, end: item['progress_percent']),
+                                builder: (context, value, _) {
+                                  return LinearProgressIndicator(
+                                    value: value,
+                                    backgroundColor: Colors.grey[300],
+                                  );
+                                },
                               ),
                             ],
                           ),

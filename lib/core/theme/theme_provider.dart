@@ -12,7 +12,7 @@ class ThemeModeNotifier extends Notifier<ThemeMode> {
     if (themeIndex != null) {
       return ThemeMode.values[themeIndex];
     }
-    return ThemeMode.system;
+    return ThemeMode.dark;
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
