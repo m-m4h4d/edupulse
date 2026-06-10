@@ -4,29 +4,32 @@ import 'package:go_router/go_router.dart';
 import '../../../core/utils/validators.dart';
 import 'auth_provider.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends ConsumerStatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  void _login() async {
+  void _signup() async {
     if (_formKey.currentState!.validate()) {
-      await ref.read(authProvider.notifier).login(
+      await ref.read(authProvider.notifier).signup(
+            _nameController.text.trim(),
             _emailController.text.trim(),
             _passwordController.text,
           );
@@ -39,6 +42,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final isLoading = authState == AuthState.loading;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Create Account'),
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -51,28 +57,33 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 children: [
                   Image.asset(
                     'assets/logo.png',
-                    height: 100,
+                    height: 80,
                     errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.school, size: 100, color: Colors.blue);
+                      return const Icon(Icons.school, size: 80, color: Colors.blue);
                     },
                   ),
                   const SizedBox(height: 32),
-                  Text(
-                    'Welcome Back',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                    textAlign: TextAlign.center,
-                  ),
                   if (authState == AuthState.error) ...[
-                    const SizedBox(height: 16),
                     const Text(
-                      'Invalid email or password',
+                      'An error occurred during signup',
                       style: TextStyle(color: Colors.red),
                       textAlign: TextAlign.center,
                     ),
+                    const SizedBox(height: 16),
                   ],
-                  const SizedBox(height: 32),
+                  TextFormField(
+                    controller: _nameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Full Name',
+                      prefixIcon: Icon(Icons.person_outline),
+                      border: OutlineInputBorder(),
+                    ),
+                    keyboardType: TextInputType.name,
+                    validator: AppValidators.validateName,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    enabled: !isLoading,
+                  ),
+                  const SizedBox(height: 16),
                   TextFormField(
                     controller: _emailController,
                     decoration: const InputDecoration(
@@ -110,7 +121,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: isLoading ? null : _login,
+                    onPressed: isLoading ? null : _signup,
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
@@ -120,16 +131,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             width: 20,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('LOGIN', style: TextStyle(fontSize: 16)),
+                        : const Text('SIGN UP', style: TextStyle(fontSize: 16)),
                   ),
                   const SizedBox(height: 16),
                   TextButton(
                     onPressed: isLoading
                         ? null
                         : () {
-                            context.go('/signup');
+                            context.go('/login');
                           },
-                    child: const Text('Don\'t have an account? Sign Up'),
+                    child: const Text('Already have an account? Login'),
                   ),
                 ],
               ),

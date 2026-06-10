@@ -77,6 +77,39 @@ class DatabaseHelper {
         FOREIGN KEY (lesson_id) REFERENCES $tableLessons (id) ON DELETE CASCADE
       )
     ''');
+
+    await _insertMockData(db);
+  }
+
+  Future<void> _insertMockData(Database db) async {
+    // Insert Mock Courses
+    final courses = [
+      {
+        'id': 'c1',
+        'title': 'Flutter Mastery',
+        'description': 'Learn Flutter from scratch to advanced concepts.',
+        'category': 'Development',
+        'difficulty': 'Intermediate',
+      },
+      {
+        'id': 'c2',
+        'title': 'UI/UX Design Principles',
+        'description': 'Master the art of creating beautiful interfaces.',
+        'category': 'Design',
+        'difficulty': 'Beginner',
+      },
+      {
+        'id': 'c3',
+        'title': 'Advanced State Management',
+        'description': 'Deep dive into Riverpod and BLoC.',
+        'category': 'Development',
+        'difficulty': 'Advanced',
+      }
+    ];
+
+    for (var c in courses) {
+      await db.insert(tableCourses, c);
+    }
   }
 
   // Helper methods for generic CRUD can be added here
