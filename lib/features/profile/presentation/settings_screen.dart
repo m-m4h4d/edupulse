@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -57,7 +58,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 CircleAvatar(
                   radius: 60,
                   backgroundImage: user?.profilePicturePath != null 
-                    ? FileImage(File(user!.profilePicturePath!)) 
+                    ? (kIsWeb 
+                        ? NetworkImage(user!.profilePicturePath!) as ImageProvider
+                        : FileImage(File(user!.profilePicturePath!)))
                     : null,
                   child: user?.profilePicturePath == null 
                     ? const Icon(Icons.person, size: 60) 
