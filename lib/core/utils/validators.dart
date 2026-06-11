@@ -2,7 +2,7 @@ class AppValidators {
   static const String _emailPattern =
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
   static const String _passwordPattern =
-      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~.]).{8,}$';
 
   /// Validates standard email format
   static String? validateEmail(String? value) {
@@ -16,7 +16,7 @@ class AppValidators {
     return null;
   }
 
-  /// Validates strong password rules: 
+  /// Validates strong password rules:
   /// Minimum 8 chars, 1 Upper, 1 Lower, 1 Number, 1 Special Char
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {

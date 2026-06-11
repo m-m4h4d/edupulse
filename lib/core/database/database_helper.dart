@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 
 class DatabaseHelper {
   static const _databaseName = "edupulse_v2.db";
@@ -25,6 +27,12 @@ class DatabaseHelper {
 
   // Open the database
   Future<Database> _initDatabase() async {
+    if (kIsWeb) {
+      var factory = databaseFactoryFfiWeb;
+      return await factory.openDatabase(_databaseName,
+          options: OpenDatabaseOptions(
+              version: _databaseVersion, onCreate: _onCreate));
+    }
     String path = join(await getDatabasesPath(), _databaseName);
     return await openDatabase(path,
         version: _databaseVersion, onCreate: _onCreate);

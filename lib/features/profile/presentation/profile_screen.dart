@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../auth/presentation/auth_provider.dart';
@@ -12,7 +13,7 @@ class ProfileScreen extends ConsumerWidget {
     final user = ref.watch(authProvider).user;
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: kIsWeb ? null : AppBar(
         title: const Text('Profile'),
       ),
       body: ListView(
