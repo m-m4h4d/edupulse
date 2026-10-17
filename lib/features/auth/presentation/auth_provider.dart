@@ -30,6 +30,9 @@ class UserModel {
   }
 }
 
+// Sentinel so copyWith can tell "not passed" apart from an explicit null.
+const _unset = Object();
+
 class AuthState {
   final bool isAuthenticated;
   final bool isLoading;
@@ -48,13 +51,15 @@ class AuthState {
   AuthState copyWith({
     bool? isAuthenticated,
     bool? isLoading,
-    String? errorMessage,
+    Object? errorMessage = _unset,
     UserModel? user,
   }) {
     return AuthState(
       isAuthenticated: isAuthenticated ?? this.isAuthenticated,
       isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: identical(errorMessage, _unset)
+          ? this.errorMessage
+          : errorMessage as String?,
       user: user ?? this.user,
     );
   }
