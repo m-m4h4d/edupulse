@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _fetchQuote() async {
     try {
       final response = await http.get(Uri.parse('https://dummyjson.com/quotes/random'));
+      if (!mounted) return;
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
@@ -41,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() => _quote = "Never stop learning!");
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() => _quote = "Never stop learning!");
     }
   }
@@ -57,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     final data = await db.rawQuery(query, args);
+    if (!mounted) return;
     setState(() {
       _courses = data;
       _isLoading = false;
